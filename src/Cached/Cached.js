@@ -17,25 +17,27 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-const _Goldfish = {
-  CachedProperties: {
-    document: null,
-    script: null,
-    user: null
-  },
-  CacheService2: {
-    document: null,
-    script: null,
-    user: null
-  },
-  PropertiesService2: {
-    document: null,
-    script: null,
-    user: null
-  },
-  SpreadsheetApp2: {
-    spreadsheet: null,
-    ui: null,
-    ids: {}
+class Cached {
+  constructor (cache, properties) {
+    this._cache = cache;
+    this._properties = properties;
   }
-};
+
+  get (key) {
+    return this._cache.get(key) || (() => {
+      const value = this._properties.getProperty(key);
+      this._cache.put(key, value);
+      return value;
+    })();
+  }
+
+  remove (key) {
+    this._properties.deleteProperty(key);
+    this._cache.remove(key);
+  }
+
+  update (key, value) {
+    this._properties.setProperty(key, value);
+    this._cache.put(key, value);
+  }
+}

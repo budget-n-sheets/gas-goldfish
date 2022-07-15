@@ -17,25 +17,29 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-const _Goldfish = {
-  CachedProperties: {
-    document: null,
-    script: null,
-    user: null
-  },
-  CacheService2: {
-    document: null,
-    script: null,
-    user: null
-  },
-  PropertiesService2: {
-    document: null,
-    script: null,
-    user: null
-  },
-  SpreadsheetApp2: {
-    spreadsheet: null,
-    ui: null,
-    ids: {}
+class CachedProperties {
+  static get _self () {
+    return _Goldfish.CachedProperties;
   }
-};
+
+  static withDocument () {
+    const self = this._self;
+    return self.document ||
+          (self.document = new Cached(CacheService2.getDocumentCache(),
+            PropertiesService2.getDocumentProperties()));
+  }
+
+  static withScript () {
+    const self = this._self;
+    return self.script ||
+          (self.script = new Cached(CacheService2.getScriptCache(),
+            PropertiesService2.getScriptProperties()));
+  }
+
+  static withUser () {
+    const self = this._self;
+    return self.user ||
+          (self.user = new Cached(CacheService2.getUserCache(),
+            PropertiesService2.getUserProperties()));
+  }
+}
