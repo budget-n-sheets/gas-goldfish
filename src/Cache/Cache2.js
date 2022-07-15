@@ -17,15 +17,40 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-const _Goldfish = {
-  CacheService2: {
-    document: null,
-    script: null,
-    user: null
-  },
-  SpreadsheetApp2: {
-    spreadsheet: null,
-    ui: null,
-    ids: {}
+class Cache2 {
+  constructor (cache) {
+    this._self = cache;
   }
-};
+
+  get (key) {
+    return JSON.parse(this._self.get(key));
+  }
+
+  getAll (keys) {
+    const all = this._self.getAll(keys);
+    for (const key in all) {
+      all[key] = JSON.parse(all[key]);
+    }
+    return all;
+  }
+
+  put (key, value, expiration = 600) {
+    this._self.put(key, JSON.stringify(value), expiration);
+  }
+
+  putAll (values, expirationInSeconds = 600) {
+    const pairs = Object.assign({}, values);
+    for (const key in pairs) {
+      pairs[key] = JSON.stringify(pairs[key]);
+    }
+    this._self.putAll(pairs, expirationInSeconds);
+  }
+
+  remove (key) {
+    this._self.remove(key);
+  }
+
+  removeAll (keys) {
+    this._self.removeAll(keys);
+  }
+}
