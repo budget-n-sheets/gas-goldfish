@@ -17,30 +17,34 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-const _Goldfish = {
-  CachedProperties: {
-    document: null,
-    script: null,
-    user: null
-  },
-  CacheService2: {
-    document: null,
-    script: null,
-    user: null
-  },
-  PropertiesService2: {
-    document: null,
-    script: null,
-    user: null
-  },
-  Settings: {
-    document: {},
-    script: {},
-    user: {}
-  },
-  SpreadsheetApp2: {
-    spreadsheet: null,
-    ui: null,
-    ids: {}
+class Settings {
+  static get _settings () {
+    return this.fish_()[this._key] || (this.fish_()[this._key] = this.cache_().get(this._key));
   }
-};
+
+  static fish_ () {
+    return _Goldfish.Settings[this._scope];
+  }
+
+  static cache_ () {
+    switch (this._scope) {
+      case 'document':
+        return CachedProperties.withDocument();
+      case 'script':
+        return CachedProperties.withScript();
+      case 'user':
+        return CachedProperties.withUser();
+      default:
+        throw new Error('Invalid scope.');
+    }
+  }
+
+  static get (key) {
+    return this._settings[key];
+  }
+
+  static set (key, value) {
+    this._settings[key] = value;
+    this.cache_().update(this._key, this._settings);
+  }
+}
