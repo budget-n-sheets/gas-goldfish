@@ -19,7 +19,8 @@
 
 class Settings {
   static get _settings () {
-    return this.fish_()[this._key] || (this.fish_()[this._key] = this.cache_().get(this._key));
+    return this.fish_()[this._key] ||
+          (this.fish_()[this._key] = this.cache_().get(this._key));
   }
 
   static fish_ () {
@@ -27,16 +28,10 @@ class Settings {
   }
 
   static cache_ () {
-    switch (this._scope) {
-      case 'document':
-        return CachedProperties.withDocument();
-      case 'script':
-        return CachedProperties.withScript();
-      case 'user':
-        return CachedProperties.withUser();
-      default:
-        throw new Error('Invalid scope.');
-    }
+    if (this._scope === 'document') return CachedProperties.withDocument();
+    if (this._scope === 'script') return CachedProperties.withScript();
+    if (this._scope === 'user') return CachedProperties.withUser();
+    throw new Error('Invalid scope.');
   }
 
   static get (key) {
@@ -44,7 +39,9 @@ class Settings {
   }
 
   static set (key, value) {
+    if (this?._config.protect) return;
     this._settings[key] = value;
     this.cache_().update(this._key, this._settings);
+    return this;
   }
 }
