@@ -17,51 +17,45 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-class Spreadsheet2 {
-  constructor (spreadsheet) {
-    this._self = spreadsheet;
-    this._sheets = {};
-
-    this.id = spreadsheet.getId();
+class Metadata {
+  constructor (item) {
+    this._item = item;
   }
 
-  copySheetsFrom (spreadsheet, names) {
-    names.forEach(name => {
-      spreadsheet.getSheetByName(name)
-        .copyTo(this._self)
-        .setName(name);
-    });
+  get_ (key) {
+    return this._item
+      .createDeveloperMetadataFinder()
+      .withVisibility(SpreadsheetApp.DeveloperMetadataVisibility.PROJECT)
+      .withKey(key)
+      .find();
   }
 
-  deleteAllSheets () {
-    this._self.insertSheet();
-    this._self.getSheets().forEach(sheet => this._self.deleteSheet(sheet));
-    this._sheets = {};
+  get (key) {
+    const a = this.get_(key);
+    return a.length > 0 ? a[0].getValue() : null;
   }
 
-  getId () {
-    return this.id;
+  remove (key) {
+    this.get_(key).forEach(m => m.remove());
+    return this;
   }
 
-  getMetadata () {
-    return new Metadata(this._self);
-  }
-
-  getSheetByName (name) {
-    if (!this._sheets[name]) return (this._sheets[name] = this._self.getSheetByName(name));
-    try {
-      this._sheets[name].getName();
-    } catch (err) {
-      this._sheets[name] = this._self.getSheetByName(name);
-    }
-    return this._sheets[name];
-  }
-
-  removeAllMetadata () {
-    this._self
+  removeAll () {
+    this._item
       .createDeveloperMetadataFinder()
       .withVisibility(SpreadsheetApp.DeveloperMetadataVisibility.PROJECT)
       .find()
       .forEach(m => m.remove());
+    return this;
+  }
+
+  set (key, value) {
+    const a = this.get_(key);
+    if (a.length > 0) a.forEach(m => m.remove());
+    this._item
+      .addDeveloperMetadata(
+        key, JSON.stringify(value),
+        SpreadsheetApp.DeveloperMetadataVisibility.PROJECT);
+    return this;
   }
 }
