@@ -24,7 +24,7 @@ class Cached {
   }
 
   get (key) {
-    return this._cache.get(key) || (() => {
+    return this._cache.get(key) ?? (() => {
       const value = this._properties.getProperty(key);
       this._cache.put(key, value);
       return value;

@@ -19,7 +19,7 @@
 
 class Settings {
   static get _settings () {
-    return this.fish_()[this._key] ||
+    return this.fish_()[this._key] ??
           (this.fish_()[this._key] = this.cache_().get(this._key));
   }
 
