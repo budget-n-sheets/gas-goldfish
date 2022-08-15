@@ -25,6 +25,10 @@ class Spreadsheet2 {
     this.id = spreadsheet.getId();
   }
 
+  get spreadsheet () {
+    return this._self;
+  }
+
   copySheetsFrom (spreadsheet, names) {
     names.forEach(name => {
       spreadsheet.getSheetByName(name)
