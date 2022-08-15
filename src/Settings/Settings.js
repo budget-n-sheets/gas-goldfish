@@ -38,9 +38,23 @@ class Settings {
     return this._settings[key];
   }
 
+  static getAll (keys = null) {
+    if (!keys) return Object.assign({}, this._settings);
+    const all = {};
+    keys.forEach(k => all[k] = this._settings[k]);
+    return all;
+  }
+
   static set (key, value) {
     if (this?._config.protect) return;
     this._settings[key] = value;
+    this.cache_().update(this._key, this._settings);
+    return this;
+  }
+
+  static setAll (values) {
+    if (this?._config.protect) return;
+    Object.assign(this._settings, values);
     this.cache_().update(this._key, this._settings);
     return this;
   }
