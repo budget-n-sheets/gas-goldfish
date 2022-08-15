@@ -45,6 +45,16 @@ class Settings {
     return all;
   }
 
+  static remove (key) {
+    delete this._settings[key];
+    return this;
+  }
+
+  static removeAll (keys) {
+    keys.forEach(k => delete this._settings[k]);
+    return this;
+  }
+
   static set (key, value) {
     if (this?._config.protect) return;
     this._settings[key] = value;
