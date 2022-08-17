@@ -56,14 +56,14 @@ class Settings {
   }
 
   static set (key, value) {
-    if (this?._config.protect) return;
+    if (this._config?.protect) return;
     this._settings[key] = value;
     this.cache_().update(this._key, this._settings);
     return this;
   }
 
   static setAll (values) {
-    if (this?._config.protect) return;
+    if (this._config?.protect) return;
     Object.assign(this._settings, values);
     this.cache_().update(this._key, this._settings);
     return this;
