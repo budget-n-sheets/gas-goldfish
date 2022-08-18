@@ -59,6 +59,7 @@ class Settings {
 
   static set (key, value) {
     if (this._config?.protect) return;
+    if (!Object.hasOwn(this._settings, key)) return;
     this._settings[key] = value;
     this.cache_().update(this._key, this._settings);
     return this;
@@ -66,7 +67,9 @@ class Settings {
 
   static setAll (values) {
     if (this._config?.protect) return;
-    Object.assign(this._settings, values);
+    for (const key in values) {
+      if (Object.hasOwn(this._settings, key)) this._settings[key] = values[key];
+    }
     this.cache_().update(this._key, this._settings);
     return this;
   }
