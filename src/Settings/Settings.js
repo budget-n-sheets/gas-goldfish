@@ -23,15 +23,15 @@ class Settings {
           (this.fish_()[this._key] = this.cache_().get(this._key));
   }
 
-  static fish_ () {
-    return _Goldfish.Settings[this._scope];
-  }
-
   static cache_ () {
     if (this._scope === 'document') return CachedProperties.withDocument();
     if (this._scope === 'script') return CachedProperties.withScript();
     if (this._scope === 'user') return CachedProperties.withUser();
     throw new Error('Invalid scope.');
+  }
+
+  static fish_ () {
+    return _Goldfish.Settings[this._scope];
   }
 
   static get (key) {
@@ -43,6 +43,14 @@ class Settings {
     const all = {};
     keys.forEach(k => all[k] = this._settings[k]);
     return all;
+  }
+
+  static insert (key, value) {
+    if (this._config?.protect) return;
+    if (Object.hasOwn(this._settings, key)) return;
+    this._settings[key] = value;
+    this.cache_().update(this._key, this._settings);
+    return this;
   }
 
   static remove (key) {
