@@ -41,7 +41,7 @@ class Settings {
   static getAll (keys = null) {
     if (!keys) return Object.assign({}, this._settings);
     const all = {};
-    keys.forEach(k => all[k] = this._settings[k]);
+    keys.forEach(k => (all[k] = this._settings[k]));
     return all;
   }
 
