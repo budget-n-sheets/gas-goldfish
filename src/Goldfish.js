@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-const _Goldfish = {
+const _Goldfish = Object.seal({
   CachedProperties: {
     document: null,
     script: null,
@@ -43,4 +43,4 @@ const _Goldfish = {
     ui: null,
     ids: {}
   }
-};
+});
