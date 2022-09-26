@@ -38,8 +38,9 @@ class Spreadsheet2 {
   }
 
   deleteAllSheets () {
+    const sheets = this._self.getSheets();
     this._self.insertSheet();
-    this._self.getSheets().forEach(sheet => this._self.deleteSheet(sheet));
+    sheets.forEach(sheet => this._self.deleteSheet(sheet));
     this._sheets = {};
   }
 
